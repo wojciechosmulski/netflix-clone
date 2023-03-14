@@ -4,6 +4,7 @@ import { NextPageContext } from "next"
 import useCurrentUser from "@/hooks/useCurrentUser"
 import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
+import Billboard from "@/components/Billboard"
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context)
@@ -28,6 +29,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
+      <Billboard />
       <Footer />
     </>
   )
