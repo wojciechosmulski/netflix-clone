@@ -9,7 +9,7 @@ const NavbarItem: FC<NavbarItemProps> = ({
 }) => {
   return (
     <div className="text-white cursor-pointer hover:text-gray-300 hover:scale-110 transition">
-      {label}
+        <span className="link link-underline link-underline-black">{label}</span>
     </div>
   )
 }
