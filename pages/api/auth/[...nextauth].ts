@@ -2,10 +2,33 @@ import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { compare } from 'bcrypt'
 
-import prismadb from '../../../lib/prismadb'
+import GithubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
+import DiscordProvider from 'next-auth/providers/discord'
+import FACEITProvider from 'next-auth/providers/faceit'
+
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+
+import prismadb from '@/lib/prismadb'
 
 export default NextAuth({
   providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    }),
+    DiscordProvider({
+      clientId: process.env.DISCORD_CLIENT_ID || '',
+      clientSecret: process.env.DISCORD_CLIENT_SECRET || '',
+    }),
+    FACEITProvider({
+      clientId: process.env.FACEIT_CLIENT_ID || '',
+      clientSecret: process.env.FACEIT_CLIENT_SECRET || '',
+    }),
     Credentials({
       id: 'credentials',
       name: 'Credentials',
@@ -32,7 +55,10 @@ export default NextAuth({
           throw new Error('User not found')
         }
 
-        const isValid = await compare(credentials.password, user.hashedPassword)
+        const isValid = await compare(
+          credentials.password,
+          user.hashedPassword
+        )
 
         if (!isValid) {
           throw new Error('Invalid password')
@@ -46,6 +72,7 @@ export default NextAuth({
     signIn: '/auth',
   },
   debug: process.env.NODE_ENV === 'development',
+  adapter: PrismaAdapter(prismadb),
   session: {
     strategy: 'jwt',
   },

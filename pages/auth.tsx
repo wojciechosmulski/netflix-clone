@@ -1,8 +1,13 @@
-import Input from "../components/Input"
+import Input from "@/components/Input"
 import { useState, useCallback } from "react"
 import axios from "axios"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/router"
+
+import { FcGoogle } from 'react-icons/fc'
+import { FaGithub } from 'react-icons/fa'
+import { FaDiscord } from 'react-icons/fa'
+import { SiFaceit } from 'react-icons/si'
 
 const Auth = () => {
     const router = useRouter()
@@ -85,6 +90,31 @@ const Auth = () => {
                     <button onClick={variant === 'login' ? login : register} className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
                         {variant === 'login' ? 'Sign in' : 'Register'}
                     </button>
+                    <div className="flex flex-row items-center gap-4 mt-8 justify-center">
+                        <div 
+                        onClick={() => signIn('google', {callbackUrl: '/' })}
+                        className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition">
+                            <FcGoogle size={30}/>
+                        </div>
+                        <div 
+                        onClick={() => signIn('github', {callbackUrl: '/' })}
+                        className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition">
+                            <FaGithub size={30}/>
+                        </div>
+                        <div 
+                        onClick={() => signIn('discord', { callbackUrl: '/' })}
+                        className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition">
+                            <FaDiscord size={30}/>
+                        </div>
+                        <div
+                        onClick={() => {
+                            //signIn('faceit'), { callbackUrl: '/' }
+                            alert('Faceit login is not available yet')
+                        }}
+                        className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition">
+                            <SiFaceit size={30} color="FF5500"/>
+                        </div>
+                    </div>
                     <p className="text-neutral-500 mt-12">
                         {variant === 'login' ? "Don't have an account?" : "Already have an account?"}  <a href="#" className="text-white font-semibold">
                         <span onClick={toggleVariant} className="text-white ml-1 hover:underline cursor-pointer">{variant === 'login' ? "Create one" : "Sign in"}</span></a>
