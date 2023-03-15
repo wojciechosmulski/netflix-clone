@@ -28,6 +28,7 @@ export async function getServerSideProps(context: NextPageContext) {
   }
 }
 
+
 const Auth = () => {
     const router = useRouter()
 
@@ -44,14 +45,14 @@ const Auth = () => {
 
     const login = useCallback(async () => {
             try {
-                const { error } = await signIn('credentials', {
+                const response = await signIn('credentials', {
                     email,
                     password,
                     redirect: false,
                     callbackUrl: '/',
                 })
-                if (error) {
-                    setError(error)
+                if (response && response.error) {
+                    setError(response.error)
                 } else {
                     router.push('/')
                 }
@@ -59,6 +60,7 @@ const Auth = () => {
                 setError('Something went wrong')
             }
         }, [email, password, router])    
+
 
     const register = useCallback(async () => {
         try {
