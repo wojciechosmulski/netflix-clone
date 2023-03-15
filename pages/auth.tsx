@@ -1,6 +1,6 @@
 import Input from "@/components/Input"
 import { useState, useCallback } from "react"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { getSession, signIn } from "next-auth/react"
 
 import { FcGoogle } from 'react-icons/fc'
@@ -71,9 +71,9 @@ const Auth = () => {
         })
         
         login()
-        } catch (error) {
+        } catch (error: AxiosError | any) {
             console.log(error)
-            setError(error?.response?.data.error)
+            setError(error?.response?.data?.error)
         }
     }, [email, name, password, login])
 
