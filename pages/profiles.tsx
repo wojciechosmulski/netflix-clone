@@ -49,6 +49,7 @@ const Profiles = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }
