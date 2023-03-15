@@ -13,6 +13,18 @@ export default async function handler(
 
     const { email, name, password } = req.body
 
+    if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) {
+      return res
+        .status(422)
+        .json({ error: 'Invalid email' })
+    }
+
+    if (!email || !name || !password) {
+      return res
+        .status(422)
+        .json({ error: 'Missing fields' })
+    }
+
     const existingUser = await prismadb.user.findUnique({
       where: {
         email,
@@ -20,7 +32,9 @@ export default async function handler(
     })
 
     if (existingUser) {
-      return res.status(422).json({ error: 'Email already in use' })
+      return res
+        .status(422)
+        .json({ error: 'Email already in use' })
     }
 
     const hashedPassword = await bcrypt.hash(password, 12)
@@ -37,6 +51,8 @@ export default async function handler(
 
     return res.status(200).json(user)
   } catch (error) {
-    return res.status(400).json({ error: `Something went wrong: ${error}` })
+    return res
+      .status(400)
+      .json({ error: `Something went wrong: ${error}` })
   }
 }

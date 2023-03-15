@@ -34,6 +34,7 @@ const Auth = () => {
     const [email, setEmail] = useState('')
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
 
     const [variant, setVariant] = useState('login')
 
@@ -43,16 +44,19 @@ const Auth = () => {
 
     const login = useCallback(async () => {
             try {
-                await signIn('credentials', {
+                const { error } = await signIn('credentials', {
                     email,
                     password,
                     redirect: false,
-                    callbackUrl: '/'
+                    callbackUrl: '/',
                 })
-
-                router.push('/profiles')
-            } catch (error) {
-                console.log(error)
+                if (error) {
+                    setError(error)
+                } else {
+                    router.push('/')
+                }
+            } catch (err) {
+                setError('Something went wrong')
             }
         }, [email, password, router])    
 
@@ -63,10 +67,11 @@ const Auth = () => {
             name,
             password
         })
-
+        
         login()
         } catch (error) {
             console.log(error)
+            setError(error?.response?.data.error)
         }
     }, [email, name, password, login])
 
@@ -109,6 +114,9 @@ const Auth = () => {
                     <button onClick={variant === 'login' ? login : register} className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
                         {variant === 'login' ? 'Sign in' : 'Register'}
                     </button>
+                    {error && (
+                        <p className="text-red-600 mt-4">{error}</p>
+                    )}
                     <div className="flex flex-row items-center gap-4 mt-8 justify-center">
                         <div 
                         onClick={() => signIn('google', {callbackUrl: '/profiles' })}

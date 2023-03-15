@@ -45,14 +45,29 @@ export default NextAuth({
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Email & Password required')
         }
+
+        if (
+          !credentials.email.match(
+            /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+          )
+        ) {
+          throw new Error('Invalid email')
+        }
+
         const user = await prismadb.user.findUnique({
           where: {
             email: credentials.email,
           },
         })
 
-        if (!user || !user.hashedPassword) {
+        if (!user) {
           throw new Error('User not found')
+        }
+
+        if (!user?.hashedPassword) {
+          throw new Error(
+            'That email is registered with a social account'
+          )
         }
 
         const isValid = await compare(
