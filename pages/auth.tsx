@@ -9,6 +9,7 @@ import { FaDiscord } from 'react-icons/fa'
 import { SiFaceit } from 'react-icons/si'
 import Footer from "@/components/Footer"
 import { NextPageContext } from "next"
+import { useRouter } from "next/router"
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context)
@@ -18,7 +19,7 @@ export async function getServerSideProps(context: NextPageContext) {
       redirect: {
         destination: "/",
         permanent: false,
-      },
+      }
     }
   }
 
@@ -28,6 +29,8 @@ export async function getServerSideProps(context: NextPageContext) {
 }
 
 const Auth = () => {
+    const router = useRouter()
+
     const [email, setEmail] = useState('')
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
@@ -44,13 +47,14 @@ const Auth = () => {
                     email,
                     password,
                     redirect: false,
-                    callbackUrl: '/profiles'
+                    callbackUrl: '/'
                 })
-    
+
+                router.push('/profiles')
             } catch (error) {
                 console.log(error)
             }
-        }, [email, password])    
+        }, [email, password, router])    
 
     const register = useCallback(async () => {
         try {
